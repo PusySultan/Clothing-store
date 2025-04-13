@@ -21,17 +21,31 @@ public class ClothingFindController
         return clothingFindService.getClothingById(id);
     }
 
-    // Фильтрация товаров по типу
+    /// Фильтрация товаров по типу
     @GetMapping(params = "type")
     public ResponseEntity<?> getClothingByType(@RequestParam String type)
     {
         return clothingFindService.getClothingByType(type);
     }
 
-    // Фильтрация товаров по бренду
+    /// Фильтрация товаров по бренду
     @GetMapping(params = "brand")
     public ResponseEntity<?> getClothingByBrand(@RequestParam String brand)
     {
         return clothingFindService.getClothingByBrand(brand);
+    }
+
+    /// Фильтрация по максимальной стоимости
+    @GetMapping(params = "maxCost")
+    public ResponseEntity<?> getClothingByMaxCost(double maxCost)
+    {
+        return clothingFindService.getClothingByMaxCost(maxCost);
+    }
+
+    /// Фильтрация по минимальной стоимости
+    @GetMapping(params = "minCost")
+    public ResponseEntity<?> findClothingByMinCost(double minCost)
+    {
+        return clothingFindService.getClothingByMinCost(minCost);
     }
 }

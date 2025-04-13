@@ -19,30 +19,30 @@ public class PersonFindController
 
     /// Фильтрация по типу
     @GetMapping(params = "type")
-    public ResponseEntity<?> checkClothingByType(@RequestParam String type)
+    public ResponseEntity<?> findClothingByType(@RequestParam String type)
     {
-       return personBuyingService.checkClothingByType(type);
+       return personBuyingService.findClothingByType(type);
     }
 
     /// Фильтрация по бренду
     @GetMapping(params = "brand")
-    public ResponseEntity<?> checkClothingByBrand(@RequestParam String brand)
+    public ResponseEntity<?> findClothingByBrand(@RequestParam String brand)
     {
-        return personBuyingService.checkClothingByBrand(brand);
+        return personBuyingService.findClothingByBrand(brand);
     }
 
     /// Фильтрация по максимальной стоимости
     @GetMapping(params = "maxCost")
-    public ResponseEntity<?> checkClothingByMaxCost(@RequestParam double maxCost)
+    public ResponseEntity<?> findClothingByMaxCost(@RequestParam double maxCost)
     {
-        return personBuyingService.checkClothingByMaxCost(maxCost);
+        return personBuyingService.findClothingByMaxCost(maxCost);
     }
 
     /// Фильтрация по минимальной стоимости
     @GetMapping(params = "minCost")
-    public ResponseEntity<?> checkClothingByMinCost(@RequestParam double minCost)
+    public ResponseEntity<?> findClothingByMinCost(@RequestParam double minCost)
     {
-        return personBuyingService.checkClothingByMinCost(minCost);
+        return personBuyingService.findClothingByMinCost(minCost);
     }
 
 }
