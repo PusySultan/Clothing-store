@@ -1,26 +1,40 @@
 package org.example.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity // - Отображение в БД
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity            // - Отображение в БД
 @NoArgsConstructor // Конструктор без параметров
-@AllArgsConstructor // Конструктор со всеми параметрами
-@Data // Генерация get и set
+@Data              // Генерация get и set
 public class Person
 {
-    @Id // Указываем поле как id
-    @GeneratedValue// Генерируем значение автоматически
-    private Long id;
+    @Id             // Указываем поле как id
+    @GeneratedValue // Генерируем значение автоматически
+    private Integer id;
     private String lastName;
     private String name;
     private String patronymic;
 
+    @Column(nullable = false)
+    private String role = "User";
+
     private String email;
     private String password;
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    private List<Order> orders = new ArrayList<>();
+
+    public Person(String lastName, String name, String patronymic,
+                  String email, String password)
+    {
+        this.lastName = lastName;
+        this.name = name;
+        this.patronymic = patronymic;
+        this.email = email;
+        this.password = password;
+    }
 }
