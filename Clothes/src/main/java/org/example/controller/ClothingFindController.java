@@ -13,7 +13,14 @@ public class ClothingFindController
 {
     @Autowired
     ClothingFindService clothingFindService;
-    
+
+    /// Получить все товары
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllClothing()
+    {
+        return clothingFindService.getAllClothing();
+    }
+
     // Фильтрация товаров по ID
     @GetMapping("/{id}")
     public ResponseEntity<?> getClothingById(@PathVariable int id)

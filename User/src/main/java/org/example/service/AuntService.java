@@ -1,7 +1,6 @@
-package org.example.Service;
+package org.example.service;
 
 import org.example.model.BodyRequest;
-import org.example.model.Order;
 import org.example.model.Person;
 import org.example.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class PersonAuntService
+public class AuntService
 {
     @Autowired
     private PersonRepository personRepository;

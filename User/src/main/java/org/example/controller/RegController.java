@@ -1,6 +1,6 @@
 package org.example.controller;
 
-import org.example.Service.PersonRegService;
+import org.example.service.RegService;
 import org.example.model.BodyRequest;
 import org.example.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 /// Это контроллер для регестрации
 @RestController
 @RequestMapping("/person/reg")
-public class PersonRegController
+public class RegController
 {
     @Autowired
-    PersonRegService personRegService;
+    RegService personRegService;
 
     /// Созданиие (регистрация) пользователя
     @PostMapping

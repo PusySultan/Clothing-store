@@ -1,4 +1,4 @@
-package org.example.Service;
+package org.example.service;
 
 import jakarta.transaction.Transactional;
 import org.example.model.BodyRequest;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 @Service
-public class PersonRegService
+public class RegService
 {
     @Autowired
     private PersonRepository personRepository;

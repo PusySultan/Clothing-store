@@ -16,6 +16,7 @@ public class Clothing
     @Id // Указываем поле как id
     @GeneratedValue// Генерируем значение автоматически
     int id;
+
     String type;
     String brand;
     String description;

@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity            // - Отображение в БД
 @NoArgsConstructor // Конструктор без параметров
 @Data              // Генерация get и set
@@ -24,9 +21,6 @@ public class Person
 
     private String email;
     private String password;
-
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    private List<Order> orders = new ArrayList<>();
 
     public Person(String lastName, String name, String patronymic,
                   String email, String password)

@@ -16,9 +16,15 @@ public class ClothingFindService
     @Autowired
     ClothingRepository clothingRepository;
 
+
+    public ResponseEntity<?> getAllClothing()
+    {
+        return ResponseEntity.ok().body(clothingRepository.findAll());
+    }
+
     public ResponseEntity<?> getClothingById(int id)
     {
-        return null;
+       return new ResponseEntity<>(clothingRepository.findById(id), HttpStatus.OK);
     }
 
     public ResponseEntity<?> getClothingByType(String type)

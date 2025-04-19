@@ -1,6 +1,6 @@
 package org.example.controller;
 
-import org.example.Service.PersonAuntService;
+import org.example.service.AuntService;
 import org.example.model.BodyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 /// Этот контроллер для входа и выхода из системы
 @RestController
 @RequestMapping("/person/aunt")
-public class PersonAuntController
+public class AuntController
 {
     @Autowired
-    private PersonAuntService personAuntService;
+    private AuntService personAuntService;
 
     /// Получение данных конкретного пользователя (Вход)
     @GetMapping()

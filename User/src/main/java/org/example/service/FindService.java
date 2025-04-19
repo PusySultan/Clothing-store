@@ -1,4 +1,4 @@
-package org.example.Service;
+package org.example.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 
 @Service
-public class PersonFindService
+public class FindService
 {
     @Autowired
     private RestTemplate restTemplate;
@@ -18,10 +18,27 @@ public class PersonFindService
     @Value("${clothing.url}")
     String clothingUrl;
 
+    public ResponseEntity<?> getAllProducts()
+    {
+        if(AuntService.auntPerson != null)
+        {
+            String url = UriComponentsBuilder
+                    .fromHttpUrl(String.format("http://%s/find/all", clothingUrl))
+                    .toUriString();
+
+            String answer = restTemplate.getForObject(url, String.class);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(answer);
+        }
+
+        return ResponseEntity.badRequest().body("Войдите в систему");
+    }
+
     /// Фильтрация по типу
     public ResponseEntity<?> findClothingByType(String type)
     {
-        if(PersonAuntService.auntPerson != null)
+        if(AuntService.auntPerson != null)
         {
             String url = UriComponentsBuilder
                     .fromHttpUrl(String.format("http://%s/find", clothingUrl))
@@ -40,7 +57,7 @@ public class PersonFindService
     /// Фильтрация по бренду
     public ResponseEntity<?> findClothingByBrand(String brand)
     {
-        if(PersonAuntService.auntPerson != null)
+        if(AuntService.auntPerson != null)
         {
             String url = UriComponentsBuilder
                     .fromHttpUrl(String.format("http://%s/find", clothingUrl))
@@ -59,7 +76,7 @@ public class PersonFindService
     /// Фильтрация по максимальной стоимости
     public ResponseEntity<?> findClothingByMaxCost(double maxCost)
     {
-        if(PersonAuntService.auntPerson != null)
+        if(AuntService.auntPerson != null)
         {
             String url = UriComponentsBuilder
                     .fromHttpUrl(String.format("http://%s/find", clothingUrl))
@@ -78,7 +95,7 @@ public class PersonFindService
     /// Фильтрация по минимальной стоимости
     public ResponseEntity<?> findClothingByMinCost(double minCost)
     {
-        if(PersonAuntService.auntPerson != null)
+        if(AuntService.auntPerson != null)
         {
             String url = UriComponentsBuilder
                     .fromHttpUrl(String.format("http://%s/find", clothingUrl))
