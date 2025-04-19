@@ -82,6 +82,26 @@ public class BuyingService
                 .body(answer);
     }
 
+    ///  Выкупить товар из корзины по id
+    public ResponseEntity<?> buyFromBasketById(int id)
+    {
+        if(AuntService.auntPerson == null)
+        {
+            return ResponseEntity.badRequest().body("Для начала  войдите в систему");
+        }
+
+        String url = UriComponentsBuilder
+                .fromHttpUrl(String.format("http://%s/buy", orderUrl))
+                .queryParam("userId", AuntService.auntPerson.getId())
+                .queryParam("productId", id)
+                .toUriString();
+
+        String answer = restTemplate.getForObject(url, String.class);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(answer);
+    }
 
     ///  Купить всю корзину
     public ResponseEntity<?> buyAllBasket()

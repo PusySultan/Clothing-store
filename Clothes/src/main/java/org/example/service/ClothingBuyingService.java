@@ -1,13 +1,15 @@
 package org.example.service;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.example.model.Clothing;
 import org.example.repository.ClothingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 ///  Сервис покупок в магазине
 @Service
@@ -33,6 +35,13 @@ public class ClothingBuyingService
             return ResponseEntity.ok().body("Товар закончился");
         }
 
+        /*
+        *  Здесь было бы не плохо реализовать запрос к
+        *  пользователяю (или передавать вместе с ответом)
+        *  кооличество денег на болансе у него, чтобы
+        * проверять возможность покупки
+        */
+
         clothing.setQuantity(quantity - 1);
         clothingRepository.save(clothing);
 
@@ -42,14 +51,21 @@ public class ClothingBuyingService
 
     public ResponseEntity<?> buyManyClothing(List<Integer> ids)
     {
-        StringBuilder answer = new StringBuilder();
+        Map<String, Integer> isBuy = new HashMap<String, Integer>();
+        String answer = "";
 
         for (int id : ids)
         {
-          answer.append(buyClothingById(id).getBody());
-          answer.append("\n");
+            answer = Objects.requireNonNull(buyClothingById(id).getBody()).toString();
+            if(Objects.equals(answer, "Покупка совершена"))
+            {
+                isBuy.put("ok", id);
+                continue;
+            }
+
+            isBuy.put("error", id);
         }
 
-        return ResponseEntity.ok().body(answer);
+        return new ResponseEntity<>(isBuy, HttpStatus.OK);
     }
 }

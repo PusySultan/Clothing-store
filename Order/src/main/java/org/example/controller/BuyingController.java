@@ -20,10 +20,17 @@ public class BuyingController
     @Autowired
     BuyingService buyingService;
 
+    ///  Выкупить всю корзину
     @GetMapping(value = "/all", params = "userId")
     public ResponseEntity<?> buyAllBasket(@RequestParam Integer userId)
     {
         return buyingService.buyAllBasket(userId);
     }
 
+    /// Купить товар по id
+    @GetMapping(params = {"userId", "productId"})
+    public ResponseEntity<?> buyFromBasketById(@RequestParam Integer userId, @RequestParam Integer productId)
+    {
+        return buyingService.buyFromBasketById(userId, productId);
+    }
 }

@@ -22,4 +22,11 @@ public class ClothingBuyingController
     {
         return clothingBuyingService.buyManyClothing(ids);
     }
+
+    ///  Купить товаров по ID
+    @GetMapping(params = "productId")
+    public ResponseEntity<?> buyClothingById(@RequestParam Integer productId)
+    {
+        return clothingBuyingService.buyClothingById(productId);
+    }
 }

@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "Orders") // - Отображение в БД
-@NoArgsConstructor       // Конструктор без параметров
-@Data                    // Генерация get и set
+@Entity(name = "Orders")
+@NoArgsConstructor
+@Data
 public class Order
 {
-    @Id                  // Указываем поле как id
+    @Id
     private Integer id;
 
     private LocalDateTime creatingTime;
@@ -58,10 +58,5 @@ public class Order
         }
 
         return list;
-    }
-
-    public void deleteAllProduct()
-    {
-        clothingList.clear();
     }
 }

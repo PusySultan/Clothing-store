@@ -5,13 +5,12 @@ import org.example.model.Order;
 import org.example.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class BuyingService
@@ -25,26 +24,90 @@ public class BuyingService
     @Value("${clothing.url}")
     String clothingUrl;
 
+    ///  Купить товар по id
+    @Transactional
+    public ResponseEntity<?> buyFromBasketById(Integer userId, Integer productId)
+    {
+        if(!orderRepository.existsById(userId))
+        {
+            return ResponseEntity.ok().body("Ваша корзина еще не создана");
+        }
+
+        Order order = orderRepository.findById(userId).get();
+
+        if(!order.getAllId().contains(productId))
+        {
+            return ResponseEntity.ok().body("В вашей корзине нет товара с таким id");
+        }
+
+        String url = UriComponentsBuilder
+                .fromHttpUrl(String.format("http://%s/buy", clothingUrl))
+                .queryParam("productId", productId)
+                .toUriString();
+
+        String answer = restTemplate.getForObject(url, String.class);
+
+        if(Objects.equals(answer, "Покупка совершена"))
+        {
+            order.getClothingList().removeIf(clothing -> productId == clothing.getProductId());
+            orderRepository.save(order);
+        }
+
+        return ResponseEntity.ok().body(answer);
+    }
 
     /// Выкупить всю корзину
     @Transactional
     public ResponseEntity<?> buyAllBasket(Integer userId)
     {
-        /// todo buy in Clothing service
-        Order order = orderRepository.findById(userId).get();
-        List<Integer> ids = order.getAllId();
+       if(!orderRepository.existsById(userId))
+       {
+           return ResponseEntity.ok().body("Ваша корзина еще не создана");
+       }
 
-        String url = UriComponentsBuilder
-                .fromHttpUrl(String.format("http://%s/buy/many", clothingUrl))
-                .queryParam("ids", ids)
-                .toUriString();
+       // Получаем список id сех товаров пользователя
+       Order order = orderRepository.findById(userId).get();
+       List<Integer> ids = order.getAllId();
 
-        String answer = restTemplate.getForObject(url, String.class);
+       if(ids.isEmpty())
+       {
+           return ResponseEntity.ok().body("Ваша корзина пуста");
+       }
 
-        /// todo delete all in product in repository
-        order.deleteAllProduct();
-        orderRepository.save(order);
+       String url = UriComponentsBuilder
+               .fromHttpUrl(String.format("http://%s/buy/many", clothingUrl))
+               .queryParam("ids", ids)
+               .toUriString();
 
-        return ResponseEntity.ok().body(answer);
+       HashMap<String, Integer> response = restTemplate.getForObject(url, HashMap.class);
+
+       if (response == null)
+       {
+           return ResponseEntity.ok().body("Ошибка покупки");
+       }
+
+       StringBuilder answer = new StringBuilder(" ");
+
+       // Проверяем какой товар получилось купить, а какой нет
+       for (Map.Entry<String, Integer> entry : response.entrySet())
+       {
+          if(Objects.equals(entry.getKey(), "ok"))
+          {
+              int index = order.getClothingPosition(entry.getValue());
+              order.getClothingList().remove(index);
+
+              answer.append("Куплен товар: ");
+              answer.append(entry.getValue());
+              continue;
+          }
+
+          answer.append("Товар: ");
+          answer.append(entry.getValue());
+          answer.append(" ");
+          answer.append("не куплен");
+       }
+
+       orderRepository.save(order);
+       return ResponseEntity.ok().body(answer);
     }
 }

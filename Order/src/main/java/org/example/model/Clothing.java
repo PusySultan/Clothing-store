@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Embeddable
 @NoArgsConstructor
-@Data               // Генерация get и set
+@Data
 public class Clothing
 {
     private int productId;
