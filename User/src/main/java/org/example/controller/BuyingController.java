@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-/// port 8080 -
+/// Port 8080 -
 /// Этот контроллер оформления заказов
 @RestController
 @RequestMapping("/person")

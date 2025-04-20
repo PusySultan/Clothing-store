@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/// port 8080 -
+/// Port 8080 -
 /// Этот контроллер для просмотра одежды в магазине и оформления заказов
 @RestController
 @RequestMapping("/person/find")
@@ -51,5 +51,4 @@ public class FindController
     {
         return findService.findClothingByMinCost(minCost);
     }
-
 }

@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/// port 8080 -
-/// Это контроллер для регестрации
+/// Port 8080 -
+/// Это контроллер для регистрации
 @RestController
 @RequestMapping("/person/reg")
 public class RegController
@@ -16,7 +16,7 @@ public class RegController
     @Autowired
     RegService personRegService;
 
-    /// Созданиие (регистрация) пользователя
+    /// Создание (регистрация) пользователя
     @PostMapping
     public  ResponseEntity<?> createPerson(@RequestBody Person person)
     {
