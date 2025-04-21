@@ -111,3 +111,6 @@ __________________________________________________________________|
         http://localhost:8080/person/admin - Удаление всех пользователей.
 
     ... todo any function in future
+
+
+... added tests
