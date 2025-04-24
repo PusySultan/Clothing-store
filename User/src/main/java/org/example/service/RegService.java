@@ -60,17 +60,14 @@ public class RegService
         return new ResponseEntity<Person>(HttpStatus.OK);
     }
 
-    private boolean checkAccess(BodyRequest bodyRequest, int id)
+    public boolean checkAccess(BodyRequest bodyRequest, int id)
     {
         if(personRepository.existsByEmail(bodyRequest.getEmail()))
         {
             Person person = personRepository.findByEmail(bodyRequest.getEmail()).get();
             String password = person.getPassword();
 
-            if (passwordEncoder.matches(bodyRequest.getPassword(), password))
-            {
-                return true;
-            }
+            return passwordEncoder.matches(bodyRequest.getPassword(), password);
         }
 
         return false;
