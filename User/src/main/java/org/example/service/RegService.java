@@ -24,7 +24,7 @@ public class RegService
     @Transactional
     public ResponseEntity<?> createPerson(Person person)
     {
-            if(personRepository.existsByEmail(person.getEmail()))
+        if(personRepository.existsByEmail(person.getEmail()))
         {
             return ResponseEntity.badRequest().body("Email уже используется") ;
         }
@@ -67,25 +67,11 @@ public class RegService
             Person person = personRepository.findByEmail(bodyRequest.getEmail()).get();
             String password = person.getPassword();
 
+            System.out.println("Password hash person: " + password); // хэш
+            System.out.println("Password body: " + passwordEncoder.encode("rawPassword"));
+            System.out.println("Password body: " + bodyRequest.getPassword()); // "rawPassword"
+
             return passwordEncoder.matches(bodyRequest.getPassword(), password);
-        }
-
-        return false;
-    }
-
-    private boolean CheckAdmin(BodyRequest bodyRequest)
-    {
-        if(personRepository.existsByEmail(bodyRequest.getEmail()))
-        {
-            Person person = personRepository.findByEmail(bodyRequest.getEmail()).get();
-            String role = person.getRole();
-            String password = person.getPassword();
-
-            if (Objects.equals(role, "Admin") &&
-                    passwordEncoder.matches(bodyRequest.getPassword(), password))
-            {
-                return true;
-            }
         }
 
         return false;

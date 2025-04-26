@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,10 +35,13 @@ public class RegServiceTest
     private Person testPerson;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp()
+    {
+        String encodePassword = "16fc2e227ce85bc7b0db2416af79550af7f6ac06da7f178b0feb063339976c5a";
+
         testPerson = new Person();
         testPerson.setEmail("test@example.com");
-        testPerson.setPassword("rawPassword");
+        testPerson.setPassword(encodePassword);
     }
 
     @Test
@@ -76,10 +80,34 @@ public class RegServiceTest
     }
 
     @Test
+    public void updatePerson_HasNotAccess_ReturnError()
+    {
+        BodyRequest bodyRequest = new BodyRequest(testPerson.getEmail(), testPerson.getPassword());
+        when(regService.checkAccess(bodyRequest, -1)).thenReturn(false);
+
+        ResponseEntity<?> response = regService.updatePerson(testPerson, -1);
+
+        assertEquals("Ошибка", response.getBody());
+    }
+
+    @Test
     public void checkAccess_AccessMissing_ReturnFalse()
     {
         when(personRepository.existsByEmail(testPerson.getEmail())).thenReturn(false);
+
         boolean access = regService.checkAccess(new BodyRequest(testPerson.getEmail(), testPerson.getPassword()), -1);
         assertFalse(access);
     }
+
+//    @Test
+//    public void checkAccess_AccessGranted_ReturnTrue()
+//    {
+//        when(personRepository.existsByEmail(testPerson.getEmail())).thenReturn(true);
+//        when(personRepository.findByEmail(testPerson.getEmail())).thenReturn(Optional.of(testPerson));
+//
+//        boolean access = regService.checkAccess(new BodyRequest(testPerson.getEmail(), "rawPassword"), -1);
+//        assertTrue(access);
+//    }
+
+
 }
