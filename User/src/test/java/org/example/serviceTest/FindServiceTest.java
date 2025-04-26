@@ -25,15 +25,10 @@ import static org.mockito.Mockito.when;
 public class FindServiceTest
 {
     @Mock
-    private PersonRepository personRepository;
-
-    @Mock
     private RestTemplate restTemplate;
 
     @InjectMocks
     private FindService findService;
-
-    private Person testPerson;
 
     @BeforeEach
     void setUp()
