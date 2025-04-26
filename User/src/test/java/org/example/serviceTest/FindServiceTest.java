@@ -65,7 +65,31 @@ public class FindServiceTest
                 "http://clothing-service:8080/find/all",
                 String.class
         );
-
     }
 
+    @Test
+    public void findClothingByType_PersonIsNotAunt_BadRequest()
+    {
+        AuntService.auntPerson = null;
+        ResponseEntity<?> response =  findService.findClothingByType("anyType");
+
+        assertEquals("Войдите в систему", response.getBody());
+    }
+
+    @Test
+    public void findClothingByType_PersonIsAunt_OkRequest()
+    {
+        AuntService.auntPerson = new Person();
+        when(restTemplate.getForObject(anyString(), eq(String.class))).thenReturn("answer");
+
+        ResponseEntity<?> response =  findService.findClothingByType("anyType");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("answer", response.getBody());
+
+        verify(restTemplate).getForObject(
+                "http://clothing-service:8080/find?type=anyType",
+                String.class
+        );
+    }
 }
