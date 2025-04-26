@@ -118,4 +118,60 @@ public class BuyingServiceTest
                 String.class
         );
     }
+
+    @Test
+    public void buyFromBasketById_PersonIsNotAunt_BadRequest()
+    {
+        AuntService.auntPerson = null;
+        ResponseEntity<?> response = buyingService.buyFromBasketById(-1);
+
+        assertEquals("Для начала  войдите в систему", response.getBody());
+    }
+
+    @Test
+    public  void buyFromBasketById_PersonIsAunt_OkRequest()
+    {
+        AuntService.auntPerson = new Person();
+        AuntService.auntPerson.setId(0);
+
+
+        when(restTemplate.getForObject(anyString(), eq(String.class))).thenReturn("answer");
+
+        ResponseEntity<?> response = buyingService.buyFromBasketById(-1);
+
+        assertEquals("answer", response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(restTemplate).getForObject(
+                "http://order-service:8080/buy?userId=0&productId=-1",
+                String.class
+        );
+    }
+
+    @Test
+    public void buyAllBasket_PersonIsNotAunt_BadRequest()
+    {
+        AuntService.auntPerson = null;
+        ResponseEntity<?> response = buyingService.buyAllBasket();
+
+        assertEquals("Для начала  войдите в систему", response.getBody());
+    }
+
+    @Test
+    public void buyAllBasket_PersonIsAunt_OkRequest()
+    {
+        AuntService.auntPerson = new Person();
+        AuntService.auntPerson.setId(0);
+
+
+        when(restTemplate.getForObject(anyString(), eq(String.class))).thenReturn("answer");
+
+        ResponseEntity<?> response = buyingService.buyAllBasket();
+
+        assertEquals("answer", response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(restTemplate).getForObject(
+                "http://order-service:8080/buy/all?userId=0",
+                String.class
+        );
+    }
 }
