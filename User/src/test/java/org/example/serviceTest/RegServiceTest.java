@@ -16,8 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,14 +34,14 @@ public class RegServiceTest
     private Person testPerson;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         testPerson = new Person();
         testPerson.setEmail("test@example.com");
         testPerson.setPassword("rawPassword");
     }
 
     @Test
-    void createPerson_EmailExists_ReturnsBadRequest()
+    public void createPerson_EmailExists_ReturnsBadRequest()
     {
         // Вернуть true когда вызван метод existsByEmail
         when(personRepository.existsByEmail(testPerson.getEmail())).thenReturn(true);
@@ -61,7 +60,7 @@ public class RegServiceTest
     }
 
     @Test
-    void createPerson_EmailDoesNotExists_ReturnsOkRequest()
+    public void createPerson_EmailDoesNotExists_ReturnsOkRequest()
     {
         // Вернуть false когда вызван метод existsByEmail
         when(personRepository.existsByEmail(testPerson.getEmail())).thenReturn(false);
@@ -74,5 +73,13 @@ public class RegServiceTest
 
         // Проверяем что save вызван
         verify(personRepository).save(any(Person.class));
+    }
+
+    @Test
+    public void checkAccess_AccessMissing_ReturnFalse()
+    {
+        when(personRepository.existsByEmail(testPerson.getEmail())).thenReturn(false);
+        boolean access = regService.checkAccess(new BodyRequest(testPerson.getEmail(), testPerson.getPassword()), -1);
+        assertFalse(access);
     }
 }
