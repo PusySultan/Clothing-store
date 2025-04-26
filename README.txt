@@ -110,11 +110,4 @@ __________________________________________________________________|
     2. DELETE request:
         http://localhost:8080/person/admin - Удаление всех пользователей.
 
-<<<<<<< HEAD
-    ... todo any function in future
-
-
-... added tests
-=======
         ... todo any function in future
->>>>>>> 8f6a23c (test)
