@@ -18,7 +18,7 @@ public class ClothingBuyingService
     @Autowired
     ClothingRepository clothingRepository;
 
-    // Покупки
+    /// Купить товар по ID
     @Transactional
     public ResponseEntity<?> buyClothingById(int id)
     {
@@ -39,7 +39,7 @@ public class ClothingBuyingService
         *  Здесь было бы не плохо реализовать запрос к
         *  пользователю (или передавать вместе с ответом)
         *  количество денег на балансе у него, чтобы
-        * проверять возможность покупки
+        *  проверять возможность покупки
         */
 
         clothing.setQuantity(quantity - 1);
@@ -49,6 +49,7 @@ public class ClothingBuyingService
     }
 
 
+    /// Купить несколько товаров
     public ResponseEntity<?> buyManyClothing(List<Integer> ids)
     {
         Map<String, Integer> isBuy = new HashMap<String, Integer>();
