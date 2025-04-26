@@ -4,7 +4,6 @@ import org.example.model.Person;
 import org.example.repository.PersonRepository;
 import org.example.service.AuntService;
 import org.example.service.FindService;
-import org.example.service.RegService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +36,8 @@ public class FindServiceTest
     private Person testPerson;
 
     @BeforeEach
-    void setUp() {
+    void setUp()
+    {
         // Устанавливаем значение для clothingUrl через рефлексию
         ReflectionTestUtils.setField(findService, "clothingUrl", "clothing-service:8080");
     }
@@ -89,6 +89,58 @@ public class FindServiceTest
 
         verify(restTemplate).getForObject(
                 "http://clothing-service:8080/find?type=anyType",
+                String.class
+        );
+    }
+
+    @Test
+    public void findClothingByBrand_PersonIsNotAunt_BadRequest()
+    {
+        AuntService.auntPerson = null;
+        ResponseEntity<?> response =  findService.findClothingByBrand("anyBrand");
+
+        assertEquals("Войдите в систему", response.getBody());
+    }
+
+    @Test
+    public void findClothingByBrand_PersonIsAunt_OkRequest()
+    {
+        AuntService.auntPerson = new Person();
+        when(restTemplate.getForObject(anyString(), eq(String.class))).thenReturn("answer");
+
+        ResponseEntity<?> response =  findService.findClothingByBrand("anyBrand");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("answer", response.getBody());
+
+        verify(restTemplate).getForObject(
+                "http://clothing-service:8080/find?brand=anyBrand",
+                String.class
+        );
+    }
+
+    @Test
+    public void findClothingByMaxCost_PersonIsNotAunt_BadRequest()
+    {
+        AuntService.auntPerson = null;
+        ResponseEntity<?> response =  findService.findClothingByMaxCost(3500);
+
+        assertEquals("Войдите в систему", response.getBody());
+    }
+
+    @Test
+    public void findClothingByMaxCost_PersonIsAunt_OkRequest()
+    {
+        AuntService.auntPerson = new Person();
+        when(restTemplate.getForObject(anyString(), eq(String.class))).thenReturn("answer");
+
+        ResponseEntity<?> response =  findService.findClothingByMaxCost(3500);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("answer", response.getBody());
+
+        verify(restTemplate).getForObject(
+                "http://clothing-service:8080/find?maxCost=3500.0",
                 String.class
         );
     }
