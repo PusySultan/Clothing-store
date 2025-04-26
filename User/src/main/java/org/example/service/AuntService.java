@@ -28,7 +28,8 @@ public class AuntService
             auntPerson = personRepository.findByEmail(bodyRequest.getEmail()).get() ;
             return new ResponseEntity<>(auntPerson, HttpStatus.OK);
         }
-            return ResponseEntity.badRequest().body("Не верный логин или пароль");
+
+        return ResponseEntity.badRequest().body("Не верный логин или пароль");
     }
 
     /// выход
@@ -43,7 +44,7 @@ public class AuntService
         return ResponseEntity.ok().body("Вы вышли из системы");
     }
 
-    private boolean checkAccess(BodyRequest bodyRequest)
+    public boolean checkAccess(BodyRequest bodyRequest)
     {
         if(personRepository.existsByEmail(bodyRequest.getEmail()))
         {
