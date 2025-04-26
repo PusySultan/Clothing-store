@@ -78,7 +78,7 @@ public class RegServiceTest
     }
 
     @Test
-    public void updatePerson_HasNotAccess_ReturnError()
+    public void updatePerson_HasNotAccess_ReturnBadRequest()
     {
         BodyRequest bodyRequest = new BodyRequest(testPerson.getEmail(), testPerson.getPassword());
         when(regService.checkAccess(bodyRequest, -1)).thenReturn(false);
@@ -102,6 +102,30 @@ public class RegServiceTest
     }
 
     @Test
+    public void deletePersonById_HasNotAccessReturnsOkRequest()
+    {
+        BodyRequest bodyRequest = new BodyRequest(testPerson.getEmail(), testPerson.getPassword());
+        when(regService.checkAccess(bodyRequest, -1)).thenReturn(false);
+
+        ResponseEntity<?> response = regService.deletePersonById(bodyRequest, 1);
+        assertEquals("Ошибка", response.getBody());
+    }
+
+    @Test
+    public void deletePersonById_AccessGranted_ReturnsOkRequest()
+    {
+        BodyRequest bodyRequest = new BodyRequest(testPerson.getEmail(), testPerson.getPassword());
+        when(personRepository.existsByEmail(testPerson.getEmail())).thenReturn(true);
+        when(personRepository.findByEmail(testPerson.getEmail())).thenReturn(Optional.of(testPerson));
+        when(passwordEncoder.matches("rawPassword", testPerson.getPassword())).thenReturn(true);
+
+        ResponseEntity<?> response = regService.deletePersonById(bodyRequest, -1);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        verify(personRepository).deleteById(anyInt());
+    }
+
+    @Test
     public void checkAccess_AccessMissing_ReturnFalse()
     {
         when(personRepository.existsByEmail(testPerson.getEmail())).thenReturn(false);
@@ -109,20 +133,4 @@ public class RegServiceTest
         boolean access = regService.checkAccess(new BodyRequest(testPerson.getEmail(), testPerson.getPassword()), -1);
         assertFalse(access);
     }
-
-
-
-
-
-//    @Test
-//    public void checkAccess_AccessGranted_ReturnTrue()
-//    {
-//        when(personRepository.existsByEmail(testPerson.getEmail())).thenReturn(true);
-//        when(personRepository.findByEmail(testPerson.getEmail())).thenReturn(Optional.of(testPerson));
-//
-//        boolean access = regService.checkAccess(new BodyRequest(testPerson.getEmail(), "rawPassword"), -1);
-//        assertTrue(access);
-//    }
-
-
 }
