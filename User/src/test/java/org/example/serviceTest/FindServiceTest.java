@@ -144,4 +144,30 @@ public class FindServiceTest
                 String.class
         );
     }
+
+    @Test
+    public void  findClothingByMinCost_PersonIsNotAunt_BadRequest()
+    {
+        AuntService.auntPerson = null;
+        ResponseEntity<?> response =  findService.findClothingByMinCost(3500);
+
+        assertEquals("Войдите в систему", response.getBody());
+    }
+
+    @Test
+    public void findClothingByMainCost_PersonIsAunt_OkRequest()
+    {
+        AuntService.auntPerson = new Person();
+        when(restTemplate.getForObject(anyString(), eq(String.class))).thenReturn("answer");
+
+        ResponseEntity<?> response =  findService.findClothingByMinCost(3500);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("answer", response.getBody());
+
+        verify(restTemplate).getForObject(
+                "http://clothing-service:8080/find?minCost=3500.0",
+                String.class
+        );
+    }
 }
