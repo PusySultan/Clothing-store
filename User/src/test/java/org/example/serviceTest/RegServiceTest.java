@@ -75,5 +75,4 @@ public class RegServiceTest
         // Проверяем что save вызван
         verify(personRepository).save(any(Person.class));
     }
-
 }
