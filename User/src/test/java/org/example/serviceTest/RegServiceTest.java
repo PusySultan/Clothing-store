@@ -37,11 +37,9 @@ public class RegServiceTest
     @BeforeEach
     public void setUp()
     {
-        String encodePassword = "16fc2e227ce85bc7b0db2416af79550af7f6ac06da7f178b0feb063339976c5a";
-
         testPerson = new Person();
         testPerson.setEmail("test@example.com");
-        testPerson.setPassword(encodePassword);
+        testPerson.setPassword("rawPassword");
     }
 
     @Test
@@ -86,8 +84,21 @@ public class RegServiceTest
         when(regService.checkAccess(bodyRequest, -1)).thenReturn(false);
 
         ResponseEntity<?> response = regService.updatePerson(testPerson, -1);
-
         assertEquals("Ошибка", response.getBody());
+    }
+
+    @Test
+    public void  updatePerson_AccessGranted_ReturnsOkRequest()
+    {
+        when(personRepository.existsByEmail(testPerson.getEmail())).thenReturn(true);
+        when(personRepository.findByEmail(testPerson.getEmail())).thenReturn(Optional.of(testPerson));
+        when(passwordEncoder.matches("rawPassword", testPerson.getPassword())).thenReturn(true);
+
+        ResponseEntity<?> response = regService.updatePerson(testPerson, -1);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        verify(personRepository).deleteById(anyInt());
+        verify(personRepository).save(any(Person.class));
     }
 
     @Test
@@ -98,6 +109,10 @@ public class RegServiceTest
         boolean access = regService.checkAccess(new BodyRequest(testPerson.getEmail(), testPerson.getPassword()), -1);
         assertFalse(access);
     }
+
+
+
+
 
 //    @Test
 //    public void checkAccess_AccessGranted_ReturnTrue()

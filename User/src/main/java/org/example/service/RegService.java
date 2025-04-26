@@ -67,10 +67,6 @@ public class RegService
             Person person = personRepository.findByEmail(bodyRequest.getEmail()).get();
             String password = person.getPassword();
 
-            System.out.println("Password hash person: " + password); // хэш
-            System.out.println("Password body: " + passwordEncoder.encode("rawPassword"));
-            System.out.println("Password body: " + bodyRequest.getPassword()); // "rawPassword"
-
             return passwordEncoder.matches(bodyRequest.getPassword(), password);
         }
 
